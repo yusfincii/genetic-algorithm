@@ -2,20 +2,36 @@ public class main
 {
     public static void main(String[] args) {
         
-        Population population = new Population(100);
+        Population population = new Population(10);
         
-        int acc = 0;
+        population.getPopulation();
         
-        while(acc < 1000){
-            
-            population.crossover(population);
-            population.mutation(population);
-            System.out.println(acc + ".nesilde en uygun kromozom: "
-                    + population.fittestChromosome());
-            System.out.println("--------");
-            acc ++;
-            
+        System.out.println("------");
+        
+        int[] res = population.allFitness();
+        
+        for(int i=0; i<res.length; i++){
+            System.out.print(res[i] + " - ");
         }
+        
+        System.out.println();
+        System.out.println("-------");
+        
+        System.out.println(population.fittestChromosome());
+        
+        
+//        int acc = 0;
+//        
+//        while(acc < 10000){
+//            
+//            population.crossover(population);
+//            population.mutation(population);
+//            System.out.println(acc + ".nesilde en uygun kromozom: "
+//                    + population.fittestChromosome());
+//            System.out.println("--------");
+//            acc ++;
+//            
+//        }
         
         
         

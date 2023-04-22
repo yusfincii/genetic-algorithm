@@ -14,7 +14,10 @@ public class Population
     // Linkedlist to create will represent our population
     LinkedList<String> population = new LinkedList();
     
+    // Constant chromosome length
     private final int CHROMOSOME_LENGTH = 17;
+    
+    // Constant target text
     private final String targetSentence = "ChatGPT and GPT-4";
     
     
@@ -52,8 +55,7 @@ public class Population
     // Chromosome(Indiviual) creating function
     private String createChromosome(){
         
-        // creating random number
-        int random = rnd.nextInt(90);
+        
         
         // Initializing new chromosome
         String chromosome = "";
@@ -61,16 +63,19 @@ public class Population
         // This string representing our character to selected by
         // random number in allChars list
         
-        // Determining chromosome lenght to 17
         for(int a=0; a<CHROMOSOME_LENGTH; a++){
             
-            // if chromosome contains selected character process will canceled
-            // and creating new random number and character
-            while(chromosome.contains(String.valueOf(allChars[random]))){
-                random = rnd.nextInt(90);
-            }
-            // else case
-            // character adding chromosome
+//            // if chromosome contains selected character, process will canceled
+//            // and creating new random number and character
+//            while(chromosome.contains(String.valueOf(allChars[random]))){
+//                random = rnd.nextInt(90);
+//            }
+//            // else case
+//            // character adding chromosome
+
+            // creating random number
+            int random = rnd.nextInt(90);
+        
             chromosome += allChars[random];
         }
         
@@ -101,7 +106,7 @@ public class Population
     
     
     // Fitness score of all elements
-    private int[] allFitness(){
+    public int[] allFitness(){
         int[] results = new int[population.size()];
         
         for(int i=0; i<population.size(); i++){
@@ -131,22 +136,22 @@ public class Population
     public String fittestChromosome(){
         
         int min = fitness(population.get(0));
-        int a = 0;
+        int point = 0;
         int[] results = allFitness();
         
         for(int i=0; i<results.length; i++){
             if(min > results[i]){
                 min = results[i];
-                a = i;
+                point = i;
             }
         }
         
-        String fittestChromosome = population.get(a);
+        String fittestChromosome = population.get(point);
         return fittestChromosome;
     }
     
     // Find second fittest chromosome in linkedlist
-    private String secondFittestChromosome(){
+    public String secondFittestChromosome(){
         
         int[] tempArray = allFitness();
         
