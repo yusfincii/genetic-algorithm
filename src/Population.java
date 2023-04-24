@@ -3,42 +3,19 @@ import java.util.Random;
 
 public class Population 
 {
+    // calculate time(start)
+    long startTime = System.nanoTime();
     
     // Creating random object for creating a random number
     Random rnd = new Random();
     
     // This array will contain all require characters
-    char[] allChars = addAllChars();
-    
-    // Creating linkedlist
-    // Linkedlist to create will represent our population
-    LinkedList<String> population = new LinkedList();
-    
-    // Constant chromosome length
-    private final int CHROMOSOME_LENGTH = 17;
-    
-    // Constant target text
-    private final String targetSentence = "ChatGPT and GPT-4";
-    
-    
-    
-    // Constructor
-    public Population(int popSize){
-        
-        // Population creating by specified size
-        for(int i=0; i<popSize; i++){
-            // creating new chromosome
-            String chromosome = createChromosome();
-            // chromosome which created adding population
-            population.add(chromosome);       
-        }   
-    }
+    private final char[] allChars = addAllChars();
     
     // =======================================================================
     // BU KISIM İÇİN(91 ADET ASCII KARAKTERI GIRDI OLARAK ALINMASI) 
     // HOCADAN İZİN ALINDI
     // =======================================================================
-    
     
     // Adding chars to allChars list
     private char[] addAllChars(){
@@ -52,10 +29,32 @@ public class Population
     }
     
     
+    
+    // Constant chromosome length
+    private final int CHROMOSOME_LENGTH = 17;
+    
+    // Constant target text
+    private final String targetSentence = "ChatGPT and GPT-4";
+    
+    // Creating Linkedlist to represent population
+    LinkedList<String> population = new LinkedList();
+    
+    
+    // Constructor
+    public Population(int popSize){
+        // Population creating by specified size
+        for(int i=0; i<popSize; i++){
+            // creating new chromosome
+            String chromosome = createChromosome();
+            // chromosome which created adding population
+            population.add(chromosome);       
+        }   
+    }
+    
+    
+    
     // Chromosome(Indiviual) creating function
     private String createChromosome(){
-        
-        
         
         // Initializing new chromosome
         String chromosome = "";
@@ -64,23 +63,18 @@ public class Population
         // random number in allChars list
         
         for(int a=0; a<CHROMOSOME_LENGTH; a++){
-            
-//            // if chromosome contains selected character, process will canceled
-//            // and creating new random number and character
-//            while(chromosome.contains(String.valueOf(allChars[random]))){
-//                random = rnd.nextInt(90);
-//            }
-//            // else case
-//            // character adding chromosome
 
-            // creating random number
+            // choosing random number
             int random = rnd.nextInt(90);
         
+            // chromosome filling
             chromosome += allChars[random];
         }
         
         return chromosome;
     }
+    
+    
     
     
     // This method prints all population elements to console 
@@ -93,11 +87,14 @@ public class Population
     }
     
     
-    // Fitness score calculate with chromosome value(string) function 
-    private int fitness(String chromosome){
+    
+    
+    // Calculate fitness score with chromosome value(string) parameter
+    public int fitness(String chromosome){
         
         int fitness = 0;
         for(int i=0; i<CHROMOSOME_LENGTH; i++){
+            //difference ascii table index of current chromosome and target sentence        
             fitness += Math.abs((int)chromosome.charAt(i) - (int) targetSentence.charAt(i));
         }
         
@@ -105,7 +102,9 @@ public class Population
     }
     
     
-    // Fitness score of all elements
+    
+    
+    // Fitness score of all elements keeps in a list
     public int[] allFitness(){
         int[] results = new int[population.size()];
         
@@ -118,74 +117,70 @@ public class Population
     
     
     
-//    public String fittestChromosome(){
-//        int fittestChromosomeScore = fitness(population.get(0));
-//        String fittestChromosome = population.get(0);
-//        
-//        for(int i=0; i<population.size(); i++){
-//            if(fitness(population.get(i)) < fittestChromosomeScore){
-//                fittestChromosomeScore = fitness(population.get(i));
-//                fittestChromosome = population.get(i);
-//            }
-//        }
-//        return fittestChromosome;
-//    }
-    
-    
-    // Find fittest chromosome on linkedlist
-    public String fittestChromosome(){
-        
-        int min = fitness(population.get(0));
-        int point = 0;
+    // calculating average fitness score of all population members
+    public int popAverage(){
+        int result = 0;
         int[] results = allFitness();
         
         for(int i=0; i<results.length; i++){
-            if(min > results[i]){
-                min = results[i];
-                point = i;
+            result += results[i];
+        }
+        
+        result /= results.length;
+        
+        return result;
+        
+    }
+    
+    
+    
+    // Find fittest chromosome on population
+    public String fittestChromosome(){
+        
+        // fittest socre initializing with first chromosomes fitness score
+        int fittestScore = fitness(population.get(0));
+        // fittest chromosomes index in population
+        int fittestIndex = 0;
+        
+        int[] results = allFitness();
+        
+        for(int i=1; i<results.length; i++){
+            if(fittestScore < results[i]){
+                fittestScore = results[i];
+                fittestIndex = i;
             }
         }
         
-        String fittestChromosome = population.get(point);
+        String fittestChromosome = population.get(fittestIndex);
         return fittestChromosome;
     }
     
-    // Find second fittest chromosome in linkedlist
-    public String secondFittestChromosome(){
+    
+    
+    // Find fittest chromosomes index on population
+    public int fittestChromosomeIndex(){
         
-        int[] tempArray = allFitness();
+        // fittest socre initializing with first chromosomes fitness score
+        int fittestScore = fitness(population.get(0));
+        // fittest chromosomes index in population
+        int fittestIndex = 0;
         
-        int min = fitness(population.get(0));
         int[] results = allFitness();
-        int a = 0;
         
-        for(int i=0; i<results.length; i++){
-            if(min < results[i]){
-                min = results[i];
-                a = i;
+        for(int i=1; i<results.length; i++){
+            if(fittestScore < results[i]){
+                fittestScore = results[i];
+                fittestIndex = i;
             }
         }
         
-        tempArray[a] = Integer.MAX_VALUE;
-        
-        int minx = Integer.MAX_VALUE;
-        int[] resultsx = tempArray;
-        int b = 0;
-        
-        for(int i=0; i<resultsx.length; i++){
-            if(minx<resultsx[i]){
-                minx = resultsx[i];
-                b = i;
-            }
-        }
-        
-        String secondFittestChromosome = population.get(b);
-        return secondFittestChromosome;
-        
+        return fittestIndex;
     }
     
     
+    
     // Find chromosome has worst fitness score
+    // Optional
     private String worstFitChromosome(){
         
         int max = fitness(population.get(0));
@@ -206,68 +201,105 @@ public class Population
     
     
     
-    // Selects 2 chromosome
-    private Population selection(Population population){
-        
-        
-        
-        
-        return population;
-    }
+    // Create a new Linkedlist refers new population
+    // Choose best chromosomes(calculating average of population and which 
+    // chromosomes's score is smaller than average it will be one of bests) 
+    // for adding to new population
+    // size of new population will be equal with previous population(generation)
+    // child of best chromosomes with created crossover 
+    // will fill remain of new population
     
-    // =======================================================================
-    // SEÇİLİM YÖNTEMİ OLARAK SABİT DURUM YÖNTEMİ KULLANILDI.
-    //
-    // EN YÜKSEK UYGUNLUK DEĞERİNE SAHİP K2 ROMOZOMDAN ÇOCUK ÜRETİLEREK
-    // EN DÜŞÜK UYGUNLUK DEĞERİNE SAHİP BİREY İLE YER DEĞİŞTİRİLİR.
-    // =======================================================================
+    
+    public void selection(){
+        
+        // creating new population
+        LinkedList<String> newPopulation = new LinkedList();
+        
+        int average = popAverage();
 
-    
-    // Crossing-over process for 2 chromosome
-    // Uses selection function
-    public void crossover(Population population){
+        int[] fitnessScores = allFitness();
+
+        // best chromosomes adding to new population
         
-        // Require variables and their assingnes
-        String fittestChromosome = fittestChromosome();
-        String secondFittestChromosome = secondFittestChromosome();
-        String worstFitChromosome = worstFitChromosome();
-        
-        // new child chromosome initializing with empty
-        String newChildChromosome = "";
-        
-        
-        // CROSS-OVER PROCESS
-        // Determining a random number between 0-17
-        int random = rnd.nextInt(CHROMOSOME_LENGTH);
-        
-        // Fittest chromosomes first random number characters assigns to
-        // new child chromosome
-        for(int i=0; i<random; i++){
-            newChildChromosome += fittestChromosome.charAt(i);
+        /////////////
+        // ELITIZM //
+        /////////////
+        for(int i=0; i<population.size(); i++){
+
+            if(fitnessScores[i] < average){
+                newPopulation.add(population.get(i));
+            }
         }
         
-        // Second fittest chromosomes last random number characters assigns to
-        // new child chromosome
-        for(int i=random; i<CHROMOSOME_LENGTH; i++){
-            newChildChromosome += secondFittestChromosome.charAt(i);
+        // target case
+        // when all chromosomes equal to each other it will throw an exception
+        if(newPopulation.isEmpty()){
+            
+            // calculate time(end time)
+            long endTime = System.nanoTime();
+            // convert time nanosecond to milisecond
+            int time = (int)((endTime - startTime)/100000);
+            
+            // Some outputs
+            System.out.println("Gecen Zaman = " + time + " milisaniye");
+            System.out.println("");
+            System.out.println("Populasyon hedefe ulasti !");
+            
         }
         
-        // Find worst fit elements index in linkedlist
-        int k = population.population.indexOf(worstFitChromosome);
+        // to keep population's size unchanged
+        int newChildNumber = population.size() - newPopulation.size();
         
-        // Insert new child chromosome to linkedlist
-        population.population.set(k, newChildChromosome);
         
+        // best members child's adding to new population with crossover
+        for(int a=0; a< newChildNumber; a++){
+            
+            // selecting a random chromosome in population
+            int random1 = rnd.nextInt(newPopulation.size());
+            
+            // selecting another random chromosome in population
+            int random2 = rnd.nextInt(newPopulation.size());
+            
+            // selecting random index for fill new child
+            int random3 = rnd.nextInt(CHROMOSOME_LENGTH);
+            
+            // new child initialize
+            String newChild = "";
+            
+            /////////////////
+            // CROSS-OVER ///
+            /////////////////
+
+            // filling new child's first part
+            for(int x=0; x<random3; x++){
+                newChild += newPopulation.get(random1).charAt(x);
+            }
+            
+            // filling new child's second part
+            for(int y=random3; y<CHROMOSOME_LENGTH; y++){
+                newChild += newPopulation.get(random2).charAt(y);
+            }
+            
+            newPopulation.add(newChild);
+            
+        }
+        
+        // population refers to new population in every iteration 
+        population = newPopulation;
         
     }
     
-    // According to mutation number it will mutate a gene
-    public void mutation(Population population){
+    
+    
+    // Mutate a gene according to mutation number
+    public void mutation(){
         
         // determining mutation number
-        int random = rnd.nextInt(population.population.size());
+        int random = rnd.nextInt(population.size());
         
-        for(int i=0; i<population.population.size(); i++){
+        // İşlemin görülmesi açısından bir kromozomun
+        // mutasyon geçirmesi garanti edildi.
+        for(int i=0; i<population.size(); i++){
             // random indexinde bulunan elemanın random sırasındaki karakteri, tüm karakterlerin 
             // bulunduğu listeden random sırasındaki karakter ile değiştirilir.
             if(i == random){
@@ -275,8 +307,8 @@ public class Population
                 int random2 = rnd.nextInt(CHROMOSOME_LENGTH);
                 int random3 = rnd.nextInt(CHROMOSOME_LENGTH);
                 
-                String mutation = population.population.get(i).replace(population.population.get(i).charAt(random2), allChars[random3]);
-                population.population.set(random, mutation);
+                String mutation = population.get(i).replace(population.get(i).charAt(random2), allChars[random3]);
+                population.set(random, mutation);
             }
             
         }

@@ -2,36 +2,49 @@ public class main
 {
     public static void main(String[] args) {
         
-        Population population = new Population(10);
         
+        // population vreating with specified element number
+        Population population = new Population(200);
+        
+        // print all elemets of population on console
         population.getPopulation();
         
         System.out.println("------");
         
+        // all fitness scores
         int[] res = population.allFitness();
         
+        System.out.println("");
+        
+        // print all fitness scores of population
         for(int i=0; i<res.length; i++){
             System.out.print(res[i] + " - ");
         }
         
-        System.out.println();
-        System.out.println("-------");
-        
-        System.out.println(population.fittestChromosome());
-        
-        
-//        int acc = 0;
-//        
-//        while(acc < 10000){
-//            
-//            population.crossover(population);
-//            population.mutation(population);
-//            System.out.println(acc + ".nesilde en uygun kromozom: "
-//                    + population.fittestChromosome());
-//            System.out.println("--------");
-//            acc ++;
-//            
-//        }
+        // Iteration count(generation count)
+        for(int i=0; i<100; i++){
+            
+            // print generation
+            System.out.println(i+1 + ". nesil");
+            System.out.println("==========");
+            
+            // print fitness chromosomes name and score
+            System.out.println();
+            System.out.println("Fittest Chromosome and Fitness Score = " +
+  population.fittestChromosome() + " - " + population.fitness(population.population.get(i)));
+            
+            System.out.println();
+            System.out.println("-------");
+            
+            // print average fitness score of population
+            System.out.println("Average: " + population.popAverage());
+            
+            System.out.println();
+            System.out.println("-------");
+            
+            // selection process
+            population.selection();
+        }
         
         
         
